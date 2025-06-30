@@ -1,0 +1,31 @@
+services:
+  ongaku:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ongaku
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - ongaku
+  postgres:
+    image: postgres
+    container_name: ongaku-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=ongaku
+      - POSTGRES_USER=ongaku
+      - POSTGRES_PASSWORD=ongaku
+    networks:
+      - ongaku
+    volumes:
+      - ongaku-data:/data/db
+networks:
+  ongaku:
+    name: ongaku
+volumes:
+  ongaku-data:
+    name: ongaku

@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ongaku-db:5432/ongaku
+    username: ongaku
+    password: ongaku
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
