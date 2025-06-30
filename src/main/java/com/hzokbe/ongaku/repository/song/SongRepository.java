@@ -9,4 +9,5 @@ import com.hzokbe.ongaku.model.song.Song;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, UUID> {
+    boolean existsByTitle(String title);
 }
