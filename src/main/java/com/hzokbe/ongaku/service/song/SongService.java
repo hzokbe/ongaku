@@ -92,4 +92,14 @@ public class SongService {
 
         return new SongResponse(id, title);
     }
+
+    public void deleteById(UUID id) {
+        var optionalSong = repository.findById(id);
+
+        if (optionalSong.isEmpty()) {
+            throw new SongNotFoundException("song not found");
+        }
+
+        repository.deleteById(id);
+    }
 }
