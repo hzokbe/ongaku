@@ -60,4 +60,36 @@ public class SongService {
 
         return new SongResponse(id, song.getTitle());
     }
+
+    public SongResponse update(UUID id, SongRequest request) {
+        var optionalSong = repository.findById(id);
+
+        if (optionalSong.isEmpty()) {
+            throw new SongNotFoundException("song not found");
+        }
+
+        var title = request.getTitle();
+
+        if (title == null) {
+            throw new InvalidSongTitleException("song title cannot be null");
+        }
+
+        title = title.trim();
+
+        if (title.isBlank()) {
+            throw new InvalidSongTitleException("song title cannot be blank");
+        }
+
+        if (repository.existsByTitle(title)) {
+            throw new AlreadyRegisteredSongException("song already registered");
+        }
+
+        var song = optionalSong.get();
+
+        song.setTitle(title);
+
+        song = repository.save(song);
+
+        return new SongResponse(id, title);
+    }
 }
