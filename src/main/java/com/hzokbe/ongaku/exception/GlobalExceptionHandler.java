@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.hzokbe.ongaku.exception.song.AlreadyRegisteredSongException;
 import com.hzokbe.ongaku.exception.song.InvalidSongTitleException;
+import com.hzokbe.ongaku.exception.song.SongNotFoundException;
 import com.hzokbe.ongaku.model.exception.response.ExceptionResponse;
 
 @RestControllerAdvice
@@ -30,6 +31,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ExceptionResponse alreadyRegisteredSongExceptionHandler(AlreadyRegisteredSongException exception) {
+        return new ExceptionResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(SongNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ExceptionResponse songNotFoundExceptionHandler(SongNotFoundException exception) {
         return new ExceptionResponse(exception.getMessage());
     }
 }
