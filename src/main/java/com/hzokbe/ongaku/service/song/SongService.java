@@ -1,5 +1,7 @@
 package com.hzokbe.ongaku.service.song;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.hzokbe.ongaku.exception.song.AlreadyRegisteredSongException;
@@ -39,5 +41,9 @@ public class SongService {
         song = repository.save(song);
 
         return new SongResponse(song.getId(), title);
+    }
+
+    public List<SongResponse> findAll() {
+        return repository.findAll().stream().map(u -> new SongResponse(u.getId(), u.getTitle())).toList();
     }
 }
