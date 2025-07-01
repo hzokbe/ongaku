@@ -107,3 +107,14 @@ Response example:
 Response example:
 
 `204 NO CONTENT`
+
+## Model
+
+### Song
+
+Represents a song entity managed by the API.
+
+| Field   | Type   | Description           |
+|---------|--------|-----------------------|
+| `id`    | UUID   | Unique identifier     |
+| `title` | String | The title of the song |
