@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.hzokbe.ongaku.exception.song.InvalidSongTitleException;
 import com.hzokbe.ongaku.model.exception.response.ExceptionResponse;
 
 @RestControllerAdvice
@@ -15,5 +16,12 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ExceptionResponse exceptionHandler(Exception exception) {
         return new ExceptionResponse("internal server error");
+    }
+
+    @ExceptionHandler(InvalidSongTitleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ExceptionResponse invalidSongTitleExceptionHandler(InvalidSongTitleException exception) {
+        return new ExceptionResponse(exception.getMessage());
     }
 }
