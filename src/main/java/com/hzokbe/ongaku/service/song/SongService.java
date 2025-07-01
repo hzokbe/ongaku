@@ -1,11 +1,13 @@
 package com.hzokbe.ongaku.service.song;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.hzokbe.ongaku.exception.song.AlreadyRegisteredSongException;
 import com.hzokbe.ongaku.exception.song.InvalidSongTitleException;
+import com.hzokbe.ongaku.exception.song.SongNotFoundException;
 import com.hzokbe.ongaku.model.song.Song;
 import com.hzokbe.ongaku.model.song.request.SongRequest;
 import com.hzokbe.ongaku.model.song.response.SongResponse;
@@ -45,5 +47,17 @@ public class SongService {
 
     public List<SongResponse> findAll() {
         return repository.findAll().stream().map(u -> new SongResponse(u.getId(), u.getTitle())).toList();
+    }
+
+    public SongResponse findById(UUID id) {
+        var optionalSong = repository.findById(id);
+
+        if (optionalSong.isEmpty()) {
+            throw new SongNotFoundException("song not found");
+        }
+
+        var song = optionalSong.get();
+
+        return new SongResponse(id, song.getTitle());
     }
 }
