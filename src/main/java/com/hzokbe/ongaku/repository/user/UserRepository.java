@@ -9,4 +9,5 @@ import com.hzokbe.ongaku.model.user.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
+    boolean existsByUsername(String username);
 }
