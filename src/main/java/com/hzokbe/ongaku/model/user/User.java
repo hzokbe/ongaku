@@ -2,8 +2,12 @@ package com.hzokbe.ongaku.model.user;
 
 import java.util.UUID;
 
+import com.hzokbe.ongaku.model.role.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +26,10 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
     public User() {
     }
 
@@ -29,6 +37,14 @@ public class User {
         this.username = username;
 
         this.passwordHash = passwordHash;
+    }
+
+    public User(String username, String passwordHash, Role role) {
+        this.username = username;
+
+        this.passwordHash = passwordHash;
+        
+        this.role = role;
     }
 
     public UUID getId() {
@@ -53,5 +69,13 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
