@@ -10,6 +10,7 @@ import com.hzokbe.ongaku.model.user.User;
 import com.hzokbe.ongaku.model.user.request.UserRequest;
 import com.hzokbe.ongaku.model.user.response.UserResponse;
 import com.hzokbe.ongaku.repository.user.UserRepository;
+import com.hzokbe.ongaku.service.jwt.JwtService;
 
 @Service
 public class UserService {
@@ -17,10 +18,14 @@ public class UserService {
 
     private final PasswordEncoder encoder;
 
-    public UserService(UserRepository repository, PasswordEncoder encoder) {
+    private final JwtService service;
+
+    public UserService(UserRepository repository, PasswordEncoder encoder, JwtService service) {
         this.repository = repository;
 
         this.encoder = encoder;
+
+        this.service = service;
     }
 
     public UserResponse signUp(UserRequest request) {
