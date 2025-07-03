@@ -1,5 +1,8 @@
 package com.hzokbe.ongaku.config.security;
 
+import java.security.interfaces.RSAPublicKey;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+    @Value("${rsa.key.public}")
+    private RSAPublicKey rsaPublicKey;
+
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new Argon2PasswordEncoder(16, 32, 1, 1 << 14, 2);
