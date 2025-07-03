@@ -130,6 +130,18 @@ Response example:
 }
 ```
 
+### `POST /sign-in`
+
+Response example:
+
+`200 OK`
+
+```json
+{
+    "jwt": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJvbmdha3UiLCJzdWIiOiJhZGFfbG92ZWxhY2UiLCJleHAiOjE3NTE1ODU2NTgsImlhdCI6MTc1MTU4MjA1OCwicm9sZXMiOlsiUk9MRV9VU0VSIl19.g-aP1bGOR8VW6hF_1yboQyZaj_PAd_B6-xyEfSyQz8eU0TlInjImuXxlXBLJZlXlCZPGNF3Sn7tyo-Nc8Nsp_4rjfEABokHSI0vosOKyXgHIn02Cd1DsNHfbGFtGyDfNODUsOwCNkgPOwmNvqqKdyq5jYka5ZRXLt9o5DBKmrbKfKdQGB8MOtRInXSJakobHC6LsFUWxFR9m7r3Fm-qeXp8MWYXuKMVf2ABYLwwXu2dVmEK2KeB2gn0Yopije3ENKmNoWJJcYiZLZdA_53FLcnisGxfil-7ZcOAxaViMQw28FlVZJzClkmujC5gnQcOTMrE7tYLKUQrN-yZr-E0szQ"
+}
+```
+
 ## Model
 
 ### Song
