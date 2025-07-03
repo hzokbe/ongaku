@@ -6,3 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+rsa:
+  key:
+    public: classpath:public.key
+    private: classpath:private.key
