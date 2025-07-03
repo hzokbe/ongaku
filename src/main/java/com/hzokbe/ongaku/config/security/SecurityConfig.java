@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -55,5 +57,10 @@ public class SecurityConfig {
         var jwkSet = new ImmutableJWKSet<SecurityContext>(new JWKSet(jwk));
 
         return new NimbusJwtEncoder(jwkSet);
+    }
+
+    @Bean
+    public JwtDecoder getJwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
     }
 }
