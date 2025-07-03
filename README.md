@@ -108,6 +108,28 @@ Response example:
 
 `204 NO CONTENT`
 
+### `POST /sign-up`
+
+Request example:
+
+```json
+{
+    "username": "ada_lovelace",
+    "rawPassword": "ada_lovelace@123"
+}
+```
+
+Response example:
+
+`201 CREATED`
+
+```json
+{
+    "id": "df5673e3-0464-4577-ad0f-5ad72b39301a",
+    "username": "ada_lovelace"
+}
+```
+
 ## Model
 
 ### Song
