@@ -140,3 +140,13 @@ Represents a song entity managed by the API.
 |---------|--------|-----------------------|
 | `id`    | UUID   | Unique identifier     |
 | `title` | String | The title of the song |
+
+### User
+
+Represents a user entity managed by the API.
+
+| Field          | Type       | Description                   |
+|----------------|------------|-------------------------------|
+| `id`           | UUID       | Unique identifier             |
+| `username`     | String     | The username of the user      |
+| `passwordHash` | String     | The hash of the user password |
