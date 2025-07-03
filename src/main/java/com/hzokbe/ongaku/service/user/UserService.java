@@ -1,11 +1,13 @@
 package com.hzokbe.ongaku.service.user;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hzokbe.ongaku.exception.user.AlreadyRegisteredUserException;
 import com.hzokbe.ongaku.exception.user.InvalidPasswordException;
 import com.hzokbe.ongaku.exception.user.InvalidUsernameException;
+import com.hzokbe.ongaku.model.jwt.response.JwtResponse;
 import com.hzokbe.ongaku.model.user.User;
 import com.hzokbe.ongaku.model.user.request.UserRequest;
 import com.hzokbe.ongaku.model.user.response.UserResponse;
@@ -68,5 +70,9 @@ public class UserService {
         user = repository.save(user);
 
         return new UserResponse(user.getId(), username);
+    }
+
+    public JwtResponse signIn(Authentication authentication) {
+        return service.generateJwt(authentication);
     }
 }
