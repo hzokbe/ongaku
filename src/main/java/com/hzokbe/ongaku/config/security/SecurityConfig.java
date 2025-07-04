@@ -57,11 +57,17 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/songs/**")
                     .authenticated()
+                    .requestMatchers(HttpMethod.POST, "/songs")
+                    .hasRole("ADMINISTRATOR")
+                    .requestMatchers(HttpMethod.PUT, "/songs/**")
+                    .hasRole("ADMINISTRATOR")
+                    .requestMatchers(HttpMethod.DELETE, "/songs/**")
+                    .hasRole("ADMINISTRATOR")
                     .anyRequest()
                     .denyAll()
             )
             .httpBasic(Customizer.withDefaults())
-            .oauth2ResourceServer(c -> c.jwt(Customizer.withDefaults()))
+            .oauth2ResourceServer(configurer -> configurer.jwt(converter -> converter.jwtAuthenticationConverter(getJwtAuthenticationConverter())))
             .build();
     }
 
