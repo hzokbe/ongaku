@@ -47,10 +47,13 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/sign-in")
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/songs/**")
+                    .authenticated()
                     .anyRequest()
                     .denyAll()
             )
             .httpBasic(Customizer.withDefaults())
+            .oauth2ResourceServer(c -> c.jwt(Customizer.withDefaults()))
             .build();
     }
 
