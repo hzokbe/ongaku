@@ -18,10 +18,14 @@ This project is a **REST API** that allows you to **add**, **retrieve**, **updat
 
 ## How to Run
 
-To start the application, simply run the following command:
+To configure and start the application, simply run the following commands:
 
 ```bash
-docker compose up
+openssl genrsa > src/main/resources/private.key
+
+openssl rsa -in src/main/resources/private.key -pubout -out src/main/resources/public.key
+
+docker compose up -d
 ```
 
 The API will be available at `http://localhost:8080`
