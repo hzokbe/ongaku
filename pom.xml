@@ -26,5 +26,10 @@
             <artifactId>password4j</artifactId>
             <version>1.8.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.21.1</version>
+        </dependency>
     </dependencies>
 </project>
