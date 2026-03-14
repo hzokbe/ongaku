@@ -1,16 +1,35 @@
 package com.hzokbe.ongaku.service.auth;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.hzokbe.ongaku.dto.auth.SignInRequestDTO;
+import com.hzokbe.ongaku.dto.auth.SignInResponseDTO;
 import com.hzokbe.ongaku.dto.auth.SignUpRequestDTO;
 import com.hzokbe.ongaku.dto.auth.SignUpResponseDTO;
 import com.hzokbe.ongaku.model.user.User;
 import com.hzokbe.ongaku.repository.user.UserRepository;
 import com.password4j.Password;
 import io.javalin.http.BadRequestResponse;
+import io.javalin.http.InternalServerErrorResponse;
+import io.javalin.http.UnauthorizedResponse;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public class AuthService {
     private final UserRepository userRepository = new UserRepository();
+
+    private final String jwtSecret;
+
+    public AuthService() {
+        var jwtSecret = System.getenv("JWT_SECRET");
+
+        if (jwtSecret == null) {
+            throw new InternalServerErrorResponse("JWT secret is not defined");
+        }
+
+        this.jwtSecret = jwtSecret;
+    }
 
     public SignUpResponseDTO signUp(SignUpRequestDTO dto) {
         var username = dto.username();
@@ -56,5 +75,37 @@ public class AuthService {
         user = userRepository.create(user);
 
         return new SignUpResponseDTO(user.id(), user.username());
+    }
+
+    public SignInResponseDTO signIn(SignInRequestDTO dto) {
+        var username = dto.username();
+
+        var optionalUser = userRepository.getByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            throw new UnauthorizedResponse("invalid username or password");
+        }
+
+        var user = optionalUser.get();
+
+        var password = dto.password();
+
+        var passwordHash = user.passwordHash();
+
+        if (!Password.check(password, passwordHash).withArgon2()) {
+            throw new UnauthorizedResponse("invalid username or password");
+        }
+
+        var now = Instant.now();
+
+        var jwt = JWT
+                .create()
+                .withIssuer("ongaku")
+                .withSubject(username)
+                .withIssuedAt(now)
+                .withExpiresAt(now.plusSeconds(3_600))
+                .sign(Algorithm.HMAC256(jwtSecret));
+
+        return new SignInResponseDTO(jwt);
     }
 }
