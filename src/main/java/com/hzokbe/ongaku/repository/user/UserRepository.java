@@ -13,4 +13,8 @@ public class UserRepository {
 
         return user;
     }
+
+    public boolean existsByUsername(String username) {
+        return users.stream().anyMatch(u -> u.username().equals(username));
+    }
 }
