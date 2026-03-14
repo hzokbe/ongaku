@@ -7,4 +7,10 @@ import java.util.List;
 
 public class UserRepository {
     private final List<User> users = new ArrayList<>();
+
+    public User create(User user) {
+        users.add(user);
+
+        return user;
+    }
 }
