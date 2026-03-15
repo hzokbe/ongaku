@@ -1,18 +1,17 @@
 package com.hzokbe.ongaku.repository.song;
 
 import com.hzokbe.ongaku.model.song.Song;
+import com.hzokbe.ongaku.utils.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 
-import java.util.UUID;
+import java.util.List;
 
 public class SongRepository {
-    private final Song[] songs = {
-            new Song(UUID.randomUUID(), "Smooth Criminal", "Michael Jackson"),
-            new Song(UUID.randomUUID(), "Money, Money, Money", "ABBA"),
-            new Song(UUID.randomUUID(), "Back To Black", "Amy Winehouse"),
-            new Song(UUID.randomUUID(), "Enter Sandman", "Metallica")
-    };
+    private final SessionFactory sessionFactory = Hibernate.getSessionFactory();
 
-    public Song[] getAll() {
-        return songs;
+    public List<Song> getAll() {
+        try (var session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Song", Song.class).list();
+        }
     }
 }

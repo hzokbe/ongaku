@@ -1,0 +1,11 @@
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/ongaku</property>
+        <property name="hibernate.connection.username">ongaku</property>
+        <property name="hibernate.connection.password">ongaku</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+        <mapping class="com.hzokbe.ongaku.model.user.User"/>
+        <mapping class="com.hzokbe.ongaku.model.song.Song"/>
+    </session-factory>
+</hibernate-configuration>

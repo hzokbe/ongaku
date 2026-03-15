@@ -11,8 +11,6 @@ import com.password4j.Password;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.UnauthorizedResponse;
 
-import java.util.UUID;
-
 public class AuthService {
     private final UserRepository userRepository = new UserRepository();
 
@@ -25,11 +23,11 @@ public class AuthService {
 
         var passwordHash = hash(password);
 
-        var user = new User(UUID.randomUUID(), username, passwordHash);
+        var user = new User(username, passwordHash);
 
         user = userRepository.create(user);
 
-        return new SignUpResponseDTO(user.id(), user.username());
+        return new SignUpResponseDTO(user.getId(), user.getUsername());
     }
 
     public SignInResponseDTO signIn(SignInRequestDTO dto) {
@@ -45,7 +43,7 @@ public class AuthService {
 
         var password = dto.password();
 
-        var passwordHash = user.passwordHash();
+        var passwordHash = user.getPasswordHash();
 
         if (!Password.check(password, passwordHash).withArgon2()) {
             throw new UnauthorizedResponse("invalid username or password");
