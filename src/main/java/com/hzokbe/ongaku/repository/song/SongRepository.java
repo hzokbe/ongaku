@@ -11,4 +11,8 @@ public class SongRepository {
             new Song(UUID.randomUUID(), "Back To Black", "Amy Winehouse"),
             new Song(UUID.randomUUID(), "Enter Sandman", "Metallica")
     };
+
+    public Song[] getAll() {
+        return songs;
+    }
 }
