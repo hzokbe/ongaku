@@ -32,43 +32,11 @@ public class AuthService {
     }
 
     public SignUpResponseDTO signUp(SignUpRequestDTO dto) {
-        var username = dto.username();
+        var username = verifyUsername(dto.username());
 
-        if (username == null) {
-            throw new BadRequestResponse("username cannot be null");
-        }
+        var password = verifyPassword(dto.password());
 
-        username = username.trim();
-
-        if (username.isBlank()) {
-            throw new BadRequestResponse("username cannot be blank");
-        }
-
-        if (username.length() < 8 || username.length() > 16) {
-            throw new BadRequestResponse("username must be between 8 and 16 characters");
-        }
-
-        if (userRepository.existsByUsername(username)) {
-            throw new BadRequestResponse("username already in use");
-        }
-
-        var password = dto.password();
-
-        if (password == null) {
-            throw new BadRequestResponse("password cannot be null");
-        }
-
-        password = password.trim();
-
-        if (password.isBlank()) {
-            throw new BadRequestResponse("password cannot be blank");
-        }
-
-        if (password.length() < 8 || password.length() > 64) {
-            throw new BadRequestResponse("password must be between 8 and 64 characters");
-        }
-
-        var passwordHash = Password.hash(password).withArgon2().getResult();
+        var passwordHash = hash(password);
 
         var user = new User(UUID.randomUUID(), username, passwordHash);
 
@@ -96,16 +64,62 @@ public class AuthService {
             throw new UnauthorizedResponse("invalid username or password");
         }
 
+        return new SignInResponseDTO(generateJWT(username));
+    }
+
+    public String verifyUsername(String username) {
+        if (username == null) {
+            throw new BadRequestResponse("username cannot be null");
+        }
+
+        username = username.trim();
+
+        if (username.isBlank()) {
+            throw new BadRequestResponse("username cannot be blank");
+        }
+
+        if (username.length() < 8 || username.length() > 16) {
+            throw new BadRequestResponse("username must be between 8 and 16 characters");
+        }
+
+        if (userRepository.existsByUsername(username)) {
+            throw new BadRequestResponse("username already in use");
+        }
+
+        return username;
+    }
+
+    public String verifyPassword(String password) {
+        if (password == null) {
+            throw new BadRequestResponse("password cannot be null");
+        }
+
+        password = password.trim();
+
+        if (password.isBlank()) {
+            throw new BadRequestResponse("password cannot be blank");
+        }
+
+        if (password.length() < 8 || password.length() > 64) {
+            throw new BadRequestResponse("password must be between 8 and 64 characters");
+        }
+
+        return password;
+    }
+
+    public String hash(String password) {
+        return Password.hash(password).withArgon2().getResult();
+    }
+
+    public String generateJWT(String username) {
         var now = Instant.now();
 
-        var jwt = JWT
+        return JWT
                 .create()
                 .withIssuer("ongaku")
                 .withSubject(username)
                 .withIssuedAt(now)
                 .withExpiresAt(now.plusSeconds(3_600))
                 .sign(Algorithm.HMAC256(jwtSecret));
-
-        return new SignInResponseDTO(jwt);
     }
 }
