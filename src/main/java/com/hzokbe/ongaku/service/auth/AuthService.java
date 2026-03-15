@@ -34,21 +34,7 @@ public class AuthService {
     public SignUpResponseDTO signUp(SignUpRequestDTO dto) {
         var username = verifyUsername(dto.username());
 
-        var password = dto.password();
-
-        if (password == null) {
-            throw new BadRequestResponse("password cannot be null");
-        }
-
-        password = password.trim();
-
-        if (password.isBlank()) {
-            throw new BadRequestResponse("password cannot be blank");
-        }
-
-        if (password.length() < 8 || password.length() > 64) {
-            throw new BadRequestResponse("password must be between 8 and 64 characters");
-        }
+        var password = verifyPassword(dto.password());
 
         var passwordHash = Password.hash(password).withArgon2().getResult();
 
@@ -111,5 +97,23 @@ public class AuthService {
         }
 
         return username;
+    }
+
+    public String verifyPassword(String password) {
+        if (password == null) {
+            throw new BadRequestResponse("password cannot be null");
+        }
+
+        password = password.trim();
+
+        if (password.isBlank()) {
+            throw new BadRequestResponse("password cannot be blank");
+        }
+
+        if (password.length() < 8 || password.length() > 64) {
+            throw new BadRequestResponse("password must be between 8 and 64 characters");
+        }
+
+        return password;
     }
 }
