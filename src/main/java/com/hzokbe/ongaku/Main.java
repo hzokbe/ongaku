@@ -1,13 +1,10 @@
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.hzokbe.ongaku.dto.auth.SignInRequestDTO;
 import com.hzokbe.ongaku.dto.auth.SignUpRequestDTO;
 import com.hzokbe.ongaku.service.auth.AuthService;
+import com.hzokbe.ongaku.service.jwt.JWTService;
 import com.hzokbe.ongaku.service.song.SongService;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
-import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.UnauthorizedResponse;
 
 import static io.javalin.http.HttpStatus.CREATED;
@@ -16,6 +13,8 @@ import static io.javalin.http.HttpStatus.OK;
 AuthService authService = new AuthService();
 
 SongService songService = new SongService();
+
+JWTService jwtService = new JWTService();
 
 void main() {
     Javalin.create(this::registerRoutes).start(8080);
@@ -56,27 +55,6 @@ void registerRoutes(JavalinConfig config) {
 
         var jwt = authorization.replace("Bearer ", "");
 
-        var jwtSecret = getJWTSecret();
-
-        var verifier = JWT
-                .require(Algorithm.HMAC256(jwtSecret))
-                .withIssuer("ongaku")
-                .build();
-
-        try {
-            verifier.verify(jwt);
-        } catch (JWTVerificationException exception) {
-            throw new UnauthorizedResponse("JWT is invalid or expired");
-        }
+        jwtService.verify(jwt);
     });
-}
-
-String getJWTSecret() {
-    var jwtSecret = System.getenv("JWT_SECRET");
-
-    if (jwtSecret == null) {
-        throw new InternalServerErrorResponse("JWT secret is not defined");
-    }
-
-    return jwtSecret;
 }
