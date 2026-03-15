@@ -1,11 +1,10 @@
 import com.hzokbe.ongaku.dto.auth.SignInRequestDTO;
 import com.hzokbe.ongaku.dto.auth.SignUpRequestDTO;
+import com.hzokbe.ongaku.middleware.auth.AuthMiddleware;
 import com.hzokbe.ongaku.service.auth.AuthService;
-import com.hzokbe.ongaku.service.jwt.JWTService;
 import com.hzokbe.ongaku.service.song.SongService;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
-import io.javalin.http.UnauthorizedResponse;
 
 import static io.javalin.http.HttpStatus.CREATED;
 import static io.javalin.http.HttpStatus.OK;
@@ -14,7 +13,7 @@ AuthService authService = new AuthService();
 
 SongService songService = new SongService();
 
-JWTService jwtService = new JWTService();
+AuthMiddleware authMiddleware = new AuthMiddleware();
 
 void main() {
     Javalin.create(this::registerRoutes).start(8080);
@@ -40,21 +39,5 @@ void registerRoutes(JavalinConfig config) {
             context -> context.status(OK).json(songService.getAll())
     );
 
-    config.routes.before(context -> {
-        var path = context.path();
-
-        if (path.equals("/sign-up") || path.equals("/sign-in")) {
-            return;
-        }
-
-        var authorization = context.header("Authorization");
-
-        if (authorization == null) {
-            throw new UnauthorizedResponse("authorization header is missing");
-        }
-
-        var jwt = authorization.replace("Bearer ", "");
-
-        jwtService.verify(jwt);
-    });
+    config.routes.before(authMiddleware);
 }
