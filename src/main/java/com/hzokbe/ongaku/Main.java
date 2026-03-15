@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.hzokbe.ongaku.dto.auth.SignInRequestDTO;
 import com.hzokbe.ongaku.dto.auth.SignUpRequestDTO;
 import com.hzokbe.ongaku.service.auth.AuthService;
+import com.hzokbe.ongaku.service.song.SongService;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.InternalServerErrorResponse;
@@ -13,6 +14,8 @@ import static io.javalin.http.HttpStatus.CREATED;
 import static io.javalin.http.HttpStatus.OK;
 
 AuthService authService = new AuthService();
+
+SongService songService = new SongService();
 
 void main() {
     Javalin.create(this::registerRoutes).start(8080);
@@ -32,6 +35,11 @@ void registerRoutes(JavalinConfig config) {
 
         context.status(OK).json(authService.signIn(dto));
     });
+
+    config.routes.get(
+            "/songs",
+            context -> context.status(OK).json(songService.getAll())
+    );
 
     config.routes.before(context -> {
         var path = context.path();
