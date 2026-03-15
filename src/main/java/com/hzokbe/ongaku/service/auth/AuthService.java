@@ -32,25 +32,7 @@ public class AuthService {
     }
 
     public SignUpResponseDTO signUp(SignUpRequestDTO dto) {
-        var username = dto.username();
-
-        if (username == null) {
-            throw new BadRequestResponse("username cannot be null");
-        }
-
-        username = username.trim();
-
-        if (username.isBlank()) {
-            throw new BadRequestResponse("username cannot be blank");
-        }
-
-        if (username.length() < 8 || username.length() > 16) {
-            throw new BadRequestResponse("username must be between 8 and 16 characters");
-        }
-
-        if (userRepository.existsByUsername(username)) {
-            throw new BadRequestResponse("username already in use");
-        }
+        var username = verifyUsername(dto.username());
 
         var password = dto.password();
 
@@ -107,5 +89,27 @@ public class AuthService {
                 .sign(Algorithm.HMAC256(jwtSecret));
 
         return new SignInResponseDTO(jwt);
+    }
+
+    public String verifyUsername(String username) {
+        if (username == null) {
+            throw new BadRequestResponse("username cannot be null");
+        }
+
+        username = username.trim();
+
+        if (username.isBlank()) {
+            throw new BadRequestResponse("username cannot be blank");
+        }
+
+        if (username.length() < 8 || username.length() > 16) {
+            throw new BadRequestResponse("username must be between 8 and 16 characters");
+        }
+
+        if (userRepository.existsByUsername(username)) {
+            throw new BadRequestResponse("username already in use");
+        }
+
+        return username;
     }
 }
