@@ -36,7 +36,7 @@ public class AuthService {
 
         var password = verifyPassword(dto.password());
 
-        var passwordHash = Password.hash(password).withArgon2().getResult();
+        var passwordHash = hash(password);
 
         var user = new User(UUID.randomUUID(), username, passwordHash);
 
@@ -115,5 +115,9 @@ public class AuthService {
         }
 
         return password;
+    }
+
+    public String hash(String password) {
+        return Password.hash(password).withArgon2().getResult();
     }
 }
