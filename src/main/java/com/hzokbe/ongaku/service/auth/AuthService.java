@@ -64,17 +64,7 @@ public class AuthService {
             throw new UnauthorizedResponse("invalid username or password");
         }
 
-        var now = Instant.now();
-
-        var jwt = JWT
-                .create()
-                .withIssuer("ongaku")
-                .withSubject(username)
-                .withIssuedAt(now)
-                .withExpiresAt(now.plusSeconds(3_600))
-                .sign(Algorithm.HMAC256(jwtSecret));
-
-        return new SignInResponseDTO(jwt);
+        return new SignInResponseDTO(generateJWT(username));
     }
 
     public String verifyUsername(String username) {
@@ -119,5 +109,17 @@ public class AuthService {
 
     public String hash(String password) {
         return Password.hash(password).withArgon2().getResult();
+    }
+
+    public String generateJWT(String username) {
+        var now = Instant.now();
+
+        return JWT
+                .create()
+                .withIssuer("ongaku")
+                .withSubject(username)
+                .withIssuedAt(now)
+                .withExpiresAt(now.plusSeconds(3_600))
+                .sign(Algorithm.HMAC256(jwtSecret));
     }
 }
